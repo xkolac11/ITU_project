@@ -11,13 +11,14 @@ function ukonciProhlizeniGalerie(){
 }
 
 $(document).ready(function(){
-	//vytvoøení divu pozadi
+
+	//vytvoreni divu pozadi
 	$("body").append("<div id=fgBackground>");
 	$( "#fgBackground" ).append("<div class=fotka>FOTKA</div>");
 	$( "#fgBackground" ).hide();
 	
 	//pokud je div aktivovany klikem na nej ho ukonci (neplati pro potomky)
-	$("#fgBackground").mouseup(function(e) {
+	$("#fgBackground").click(function(e) {
 		//nejedna se o potomka
 		if($( "#fgBackground" ).has(e.target).length === 0){
 			ukonciProhlizeniGalerie();
@@ -25,10 +26,8 @@ $(document).ready(function(){
 	});
 	
 	//aktivace fotogalerie
-	$(".fotoGalerie").mouseup(function(e) {
-		if($(".fotoGalerie").is(e.target)){
-			zobrazProhlizeniGalerie()
-		}
+	$(".fotoGalerie").click(function(e) {
+		zobrazProhlizeniGalerie();
 	});
 	
 	//zachyceni klavesy
