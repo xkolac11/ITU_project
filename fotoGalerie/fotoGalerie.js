@@ -88,43 +88,66 @@ $( document ).ready( function(){
 
 }); 
 
-function zmenObrazky() {
+function zmenObrazekGal() {
 	$.each( fgNaStrance, function() { // iteruj pøes fotogalerie na strance
 		var polozkaNaStrance = this;
 		$.each( vsechnyGalerie, function(){ //najdi v nactenych fotoGaleriich
 			if( polozkaNaStrance.jmeno == this.jmeno ){
 				var vsechnyGalPolozka = this;
-				//polozkaNaStrance.element.detach();
-				//$( "."+this.jmeno ).append( this.obrazky[polozkaNaStrance.index] );
-				polozkaNaStrance.element.children().fadeTo(1000,0);
-				setTimeout(function(){ 
-					polozkaNaStrance.element.children().detach();
-					polozkaNaStrance.index = ( polozkaNaStrance.index + 1 ) % vsechnyGalPolozka.obrazky.length;
+				var deti = polozkaNaStrance.element.children();
+				//nastav animaci
+				deti.fadeTo(2000,0);
+				// inkrementace indexu pomoci modula
+				polozkaNaStrance.index = ( polozkaNaStrance.index + 1 ) % vsechnyGalPolozka.obrazky.length;
+				//pridani do fotogalerie
+				polozkaNaStrance.element.append( vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element );
+				// zjisteni orientace galerie a obrazku
+				var pomerObr = vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("width").slice(0, -2) /
+								vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("height").slice(0, -2);
+				var pomerGal = polozkaNaStrance.element.css("width").slice(0, -2) /
+								polozkaNaStrance.element.css("height").slice(0, -2);		
+				if( (pomerGal > 1 && pomerObr >= 1) || // galerie na sirku obrazek na sirku
+					(pomerGal >= 1 && pomerObr <= 1)){ // galerie na sirku obrazek na vysku 
 					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
-						"max-height": (polozkaNaStrance.element.css( "height" ).slice(0,-2) - 8) + "px",
-						"max-width": (polozkaNaStrance.element.css( "width" ).slice(0,-2) - 8) + "px",
-						"box-shadow": "8px 8px 5px #888888",
-						"border-radius": "10px",
-						"opacity" : "0"
+						"height" : polozkaNaStrance.element.css("height"),
+						"width" : (polozkaNaStrance.element.css("height").slice(0, -2) * pomerObr) + "px",
 					});
-					polozkaNaStrance.element.append( vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element );
-					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.fadeTo(1000,1);
-				},1000); // cekej na dokonceni prechodu
+				}
+				else{ // obrazek orientovany na vysku
+					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
+						"width" : polozkaNaStrance.element.css("width"),
+						"height" : (polozkaNaStrance.element.css("width").slice(0, -2) / pomerObr) + "px",
+					});
+				}
+				// nastaveni odsazeni obrazku
+				var top = (polozkaNaStrance.element.css("height").slice(0, -2) -
+						vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("height").slice(0, -2)) / 2;
+				var left = (polozkaNaStrance.element.css("width").slice(0, -2) -
+						vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("width").slice(0, -2)) / 2;		
+				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
+					"margin-top" : top,
+					"margin-left" : left,
+					"opacity" : "0"
+				});		
+				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.fadeTo(2000,1);
+				setTimeout(function(){ 
+					deti.detach();
+				},2000); // cekej na dokonceni prechodu
 			}
 		});
 	});
 }
 
 function obrazkyNacteny(){
-	//alert("nacteno");
-	zmenObrazky();
-	setInterval(zmenObrazky , 5000);
+	zmenObrazekGal();
+	setInterval(zmenObrazekGal , 5000);
 }
 
 // vola se pri kompletnim nacteni stranky do pameti
 $(window).load(function() {
 	// zacni se dotazovat na stahle obrazky
 	var interval = setInterval(function(){
+		// nacteny vsechny obrazky
 		if( obrazkuCelkem == nactenychObrazku ) {
 			clearInterval(interval);
 			obrazkyNacteny();
