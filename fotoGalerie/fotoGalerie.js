@@ -6,7 +6,10 @@ var vsechnyGalerie = [];
 
 // vola se pri nacteni DOM
 $( document ).ready( function(){
-
+	
+	// nahrej CSS
+	$('head').append('<link rel="stylesheet" type="text/css" href="fotoGalerie/fotoGalerie.css">');
+	
 	// vytvoreni divu pozadi
 	$( "body" ).append( $( "<div id=fgBackground />" ).hide() );
 	$( "#fgBackground" ).append( "<div class=fotka>FOTKA</div>" );
@@ -15,13 +18,18 @@ $( document ).ready( function(){
 	$( "#fgBackground" ).click(function( e ) {
 		// nejedna se o potomka
 		if($( "#fgBackground" ).has( e.target ).length === 0){
-			$( "#fgBackground" ).hide( "slow" );
+			$( "#fgBackground" ).fadeTo(500, 0);
+			setTimeout(function(){ 
+				$( "#fgBackground" ).hide();
+			},500); // cekej na dokonceni prechodu
 		}
 	});
 	
 	// udalosti po kliknuti na galerie
 	$( ".fotoGalerie" ).click(function() {
-		$( "#fgBackground" ).show( "slow" );
+		$( "#fgBackground" ).css( "opacity", "0" );
+		$( "#fgBackground" ).show();
+		$( "#fgBackground" ).fadeTo(500, 0.8);
 		// nacti jmeno aktualni galerie
 		var trida = $(this).attr( "class" ).split(" ");
 		if( $( trida ).length == 2){
@@ -113,7 +121,7 @@ function zmenObrazekGal() {
 						"width" : (polozkaNaStrance.element.css("height").slice(0, -2) * pomerObr) + "px",
 					});
 				}
-				else{ // obrazek orientovany na vysku
+				else{ 
 					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
 						"width" : polozkaNaStrance.element.css("width"),
 						"height" : (polozkaNaStrance.element.css("width").slice(0, -2) / pomerObr) + "px",
@@ -146,14 +154,27 @@ function obrazkyNacteny(){
 // vola se pri kompletnim nacteni stranky do pameti
 $(window).load(function() {
 	// zacni se dotazovat na stahle obrazky
-	var interval = setInterval(function(){
+	var interval = setInterval(function() {
 		// nacteny vsechny obrazky
 		if( obrazkuCelkem == nactenychObrazku ) {
 			clearInterval(interval);
 			obrazkyNacteny();
 		}
 	}, 100);
+	
+
 });
 
+// scrollování
+$(window).scroll(function() {
+	var scroll = $(window).scrollTop();
+	$( "#fgBackground" ).css( "top",  scroll+"px");
+	//alert($( "#fgBackground" ).css("width") + "---" + $( "#fgBackground" ).css("height"));
+});
+
+// zmena velikost
+$( window ).resize(function() {
+	// prekreslit galeriji pokud je zapla
+});
 
 
