@@ -16,16 +16,16 @@ div.fotoGalerie
 
 div.fotka
 {
+	position: relative;
+	margin: 0 auto;
+	margin-top:40px;
 	box-shadow: 10px 10px 5px #888888;
-	border:2px solid;
-	border-radius:25px;
+	border:3px solid #666666;
+	border-radius:5px;
 	width: 200px;
 	height: 400px;
-	border: solid 2px black;
 	background-color: rgb(0,255,255);
-	position: absolute;
 	overflow: hidden;
-	margin: auto;
 }
 
 div#fgBackground

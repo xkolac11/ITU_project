@@ -15,13 +15,13 @@ $( document ).ready( function(){
 	$( "#fgBackground" ).click(function( e ) {
 		// nejedna se o potomka
 		if($( "#fgBackground" ).has( e.target ).length === 0){
-			$( "#fgBackground" ).hide( "slow" );
+			$( "#fgBackground" ).hide( "medium" );
 		}
 	});
 	
 	// udalosti po kliknuti na galerie
 	$( ".fotoGalerie" ).click(function() {
-		$( "#fgBackground" ).show( "slow" );
+		$( "#fgBackground" ).show( 200);
 		// nacti jmeno aktualni galerie
 		var trida = $(this).attr( "class" ).split(" ");
 		if( $( trida ).length == 2){
