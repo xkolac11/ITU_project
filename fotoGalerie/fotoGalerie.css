@@ -14,6 +14,15 @@ div.fotoGalerie
 	margin-top: 300px;
 }
 
+.fotoProhlizeni
+{
+	position: relatiove;
+	margin-right : 10px;
+	padding : 0;
+	box-shadow: 8px 8px 5px #888888;
+	border-radius: 5px;
+}
+
 div.fotka
 {
 	position: relative;
@@ -26,6 +35,18 @@ div.fotka
 	height: 400px;
 	background-color: rgb(0,255,255);
 	overflow: hidden;
+}
+
+div#fgPasFotek
+{
+	position: relative;
+	/*overflow: hidden;*/
+	top: 50px;
+	/*dopocitat a priradit za behu!!!*/
+	width: 9000px;
+	margin: 0;
+	padding: 0;
+	margin-left : 5px;
 }
 
 div#fgBackground
