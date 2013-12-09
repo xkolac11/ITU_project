@@ -1,4 +1,8 @@
 var jmAktualniGal; // promena s jmenem aktualni galerie
+var odkazAktGal;
+var margin = [];
+var puvodniOdsazeni;
+var iProhlizeni; // zacina indexovat od 1 pro funkci eq
 var obrazkuCelkem = 0;
 var nactenychObrazku = 0;
 var fgNaStrance = []; // vsechny fotogalerie na strance
@@ -16,26 +20,27 @@ $( document ).ready( function(){
 	// pokud je div aktivovany klikem na nej ho ukonci (neplati pro potomky)
 	$( "#fgBackground" ).click(function( e ) {
 		// nejedna se o potomka
-		if($( "#fgBackground" ).has( e.target ).length === 0){
+		if($( "#fgBackground" ).has( e.target ).length === 0 ||
+		   $( "#fgPasFotek" ).is( e.target ))		   {
 			zavriProhlizeni();
 		}
 	});
 	
 	// udalosti po kliknuti na galerie
 	$( ".fotoGalerie" ).click(function() {
+		margin.splice(0, margin.length);
 		// nacti jmeno aktualni galerie
 		var trida = $(this).attr( "class" ).split(" ");
 		if( $( trida ).length == 2){
 			nazev = trida[0] == "fotoGalerie" ? trida[1] : trida[0];	
 		}
 		jmAktualniGal = nazev;
-		
+		iProhlizeni = 0;
 		// zakazani scrollovani
 		$("body").css({"overflow":"hidden"});
 		$( "#fgBackground" ).css( "opacity", "0" );
 		$( "#fgBackground" ).show();
 		$( "#fgBackground" ).fadeTo(500, 0.8);
-		vykresliProhlizeni();
 		// zastav vykreslovani fotogalerii na strance
 		$.each(fgNaStrance, function () { 
 			this.element.children().detach();
@@ -48,16 +53,20 @@ $( document ).ready( function(){
 			// nasel jsem schodu
 			if( galeriePol.jmeno == jmAktualniGal ) {
 				$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
-					this.element.removeClass("obrazekGalerie").addClass("fotoProhlizeni");
-					this.element.css({
-						"margin-top" : "20",
-						"margin-left" : "0",
-						"opacity" : "1"
+					$.each(fgNaStrance, function() {
+						this.element.children().finish();
 					});
+					//this.stop();
+					this.element.removeClass("obrazekGalerie").addClass("fotoProhlizeni");
+					this.element.removeAttr( "style" );
+					this.element.css( "opacity", "1" );
 					$( "#fgPasFotek" ).append( this.element );
 				});
 			}
 		});
+		vykresliProhlizeni();
+		// nastav sirku
+		$( "#fgPasFotek" ).css( "margin-left", puvodniOdsazeni);
 	});
 	
 	// reakce na klavesy
@@ -69,13 +78,15 @@ $( document ).ready( function(){
 			$( "#fgBackground" ).hide( "slow" );
 		}   
 		if ( e.keyCode == 37 && $( "#fgBackground" ).is(":visible")) { // leva sipka
-			$( "#fgBackground" ).hide( "slow" );;
+			$( "#fgPasFotek" ).animate({left:'+=250px'});
+			e.preventDefault();
 		}   
 		if ( e.keyCode == 38 && $( "#fgBackground" ).is(":visible")) { // horni sipka
 			$( "#fgBackground" ).hide( "slow" );
 		}   
 		if ( e.keyCode == 39 && $( "#fgBackground" ).is(":visible")) { // prava sipka
-			$( "#fgBackground" ).hide( "slow" );
+			$( "#fgPasFotek" ).animate({left:'-=250px'});
+			e.preventDefault();
 		}   
 		if ( e.keyCode == 40 && $( "#fgBackground" ).is(":visible")) { // dolni sipka
 			//$( "#fgBackground" ).hide( "slow" );
@@ -163,6 +174,7 @@ function zmenObrazekGal() {
 				polozkaNaStrance.index = ( polozkaNaStrance.index + 1 ) % vsechnyGalPolozka.obrazky.length;
 				//pridani do fotogalerie
 				polozkaNaStrance.element.append( vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element );
+				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.removeAttr();
 				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.removeClass("fotoProhlizeni").addClass( "obrazekGalerie" );
 				// zjisteni orientace galerie a obrazku
 				var pomerObr = vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("width").slice(0, -2) /
@@ -236,6 +248,8 @@ function vykresliProhlizeni() {
 		var galeriePol = this;
 		// nasel jsem schodu
 		if( galeriePol.jmeno == jmAktualniGal ) {
+			odkazAktGal = this;
+			var sirkaCelkem = 0;
 			$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
 				var obrazek = this;
 				// zjisteni orientace okna a obrazku
@@ -243,49 +257,50 @@ function vykresliProhlizeni() {
 				// dostupna sirka a vyska
 				var vyskaOkn = $( "#fgBackground" ).css("height").slice(0, -2) - 100;
 				var sirkaOkn = $( "#fgBackground" ).css("width").slice(0, -2) / 2;
-				var pomerOkn = sirkaOkn / vyskaOkn;		
+				var pomerOkn = sirkaOkn / vyskaOkn;	
+				var konSirka;
+				var konVyska;
 				if( (pomerOkn > 1 && pomerObr >= 1) || // galerie na sirku obrazek na sirku
 					(pomerOkn >= 1 && pomerObr <= 1)){ // galerie na sirku obrazek na vysku 
 					
 					if( obrazek.vyska > vyskaOkn ) {
-						obrazek.element.css({
-							"height" : vyskaOkn + "px",
-							"width" : (vyskaOkn * pomerObr) + "px"
-						});
+						konVyska = vyskaOkn;
+						konSirka = (vyskaOkn * pomerObr);
 					}
 					else{
-						obrazek.element.css({
-							"height" : obrazek.vyska + "px",
-							"width" : obrazek.sirka + "px"
-						});
+						konVyska = obrazek.vyska;
+						konSirka = obrazek.sirka;
 					}
 				}
 				else{ 
 					if( obrazek.vyska > sirkaOkn ) {
-						obrazek.element.css({
-							"width" : sirkaOkn + "px",
-							"height" : (sirkaOkn / pomerObr) + "px"
-						});
+						konSirka = sirkaOkn;
+						konVyska = (sirkaOkn / pomerObr);
 					}
 					else {
-						obrazek.element.css({
-							"width" : obrazek.sirka + "px",
-							"height" : obrazek.vyska + "px"
-						});
+						konSirka = obrazek.sirka;
+						konVyska = obrazek.vyska;
 					}
 				}
-
+				
 				var top = vyskaOkn / 2 - obrazek.vyska / 2;
-				top = top > 0 ? top : 0;
-				if( obrazek.vyska <= sirkaOkn || obrazek.vyska <= vyskaOkn ) {
-					obrazek.element.css("margin-top", top + "px");
-				}
+				top = top < 0 ? 0 : top;
+				obrazek.element.css({
+					"margin-top" : top + "px",
+					"width" : konSirka + "px",
+					"height" : konVyska + "px"
+				});
+				sirkaCelkem += konSirka + 10;
+				margin.push( sirkaCelkem );
 			});
+
+			$( "#fgPasFotek" ).css( "width", sirkaCelkem + "px" );
+			puvodniOdsazeni = $( "#fgBackground" ).css("width").slice(0, -2) / 2 - this.obrazky[0].sirka / 2;
 		}
 	});
 }
 
-function obrazkyNacteny(){
+function spustPromitani(){
 	zmenObrazekGal();
 	setInterval(zmenObrazekGal , 5000);
 }
@@ -297,7 +312,7 @@ $(window).load(function() {
 		// nacteny vsechny obrazky
 		if( obrazkuCelkem == nactenychObrazku ) {
 			clearInterval(interval);
-			obrazkyNacteny();
+			spustPromitani();
 		}
 	}, 100);
 });

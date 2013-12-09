@@ -16,7 +16,6 @@ div.fotoGalerie
 
 .fotoProhlizeni
 {
-	position: relatiove;
 	margin-right : 10px;
 	padding : 0;
 	box-shadow: 8px 8px 5px #888888;
@@ -40,13 +39,10 @@ div.fotka
 div#fgPasFotek
 {
 	position: relative;
-	/*overflow: hidden;*/
 	top: 50px;
-	/*dopocitat a priradit za behu!!!*/
-	width: 9000px;
 	margin: 0;
 	padding: 0;
-	margin-left : 5px;
+	border: 2px solid black;
 }
 
 div#fgBackground
@@ -61,6 +57,6 @@ div#fgBackground
 	width: 100%;
 	height: 100%;
 	background-color: rgb(192,192,192);
-	opacity:0.6;
-	filter:alpha(opacity=60);
+	/*opacity:0.6;
+	filter:alpha(opacity=60);*/
 }
