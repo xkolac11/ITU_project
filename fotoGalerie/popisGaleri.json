@@ -1,0 +1,60 @@
+﻿{
+	"rychlostProhlizeni" : "1000",
+	"galerie" :
+	[
+		{
+			"jmenoGalerie" : "Galerie 01",
+			"jmenoSlozky"  : "galHor",
+			"obrazky" : 
+			[
+				{
+					"nazevSouboru" : "obrazek01.jpg",
+					"jmenoObrazku" : "Obrazek 01",
+					"popisObrazku" : "Popis obrazku 01"
+				},
+				{
+					"nazevSouboru" : "obrazek02.jpg",
+					"jmenoObrazku" : "Obrazek 02",
+					"popisObrazku" : "Popis obrazku 02"
+				},
+				{
+					"nazevSouboru" : "obrazek03.jpg",
+					"jmenoObrazku" : "Obrazek 03",
+					"popisObrazku" : "Popis obrazku 03"
+				}
+			]
+		},
+		{
+			"jmenoGalerie" : "Galerie 02",
+			"jmenoSlozky"  : "galVer",
+			"obrazky" : 
+			[
+				{
+					"nazevSouboru" : "obrazek01.jpg",
+					"jmenoObrazku" : "Obrazek 01",
+					"popisObrazku" : "Popis obrazku 01"
+				},
+				{
+					"nazevSouboru" : "obrazek02.jpg",
+					"jmenoObrazku" : "Obrazek 02",
+					"popisObrazku" : "Popis obrazku 02"
+				},
+				{
+					"nazevSouboru" : "obrazek03.jpg",
+					"jmenoObrazku" : "Obrazek 03",
+					"popisObrazku" : "Popis obrazku 03"
+				},
+				{
+					"nazevSouboru" : "obrazek04.jpg",
+					"jmenoObrazku" : "Obrazek 04",
+					"popisObrazku" : "Popis obrazku 04"
+				},	
+				{
+					"nazevSouboru" : "obrazek05.jpg",
+					"jmenoObrazku" : "Obrazek 05",
+					"popisObrazku" : "Popis obrazku 05"
+				}
+			]
+		}
+	]
+}

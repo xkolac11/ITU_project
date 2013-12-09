@@ -1,0 +1,14 @@
+﻿[
+	{
+		"jmenoGalerie" : "Galerie 01",
+		"jmenoSlozky"  : "galHor",
+		"obrazky" : 
+		[
+			{
+				"nazevSouboru" : "obrazek01.jpg",
+				"jmenoObrazku" : "Obrazek 01",
+				"popisObrazku" : "Popis obrazku 01"
+			}
+		]
+	}
+]

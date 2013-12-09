@@ -1,134 +1,44 @@
-var jmAktualniGal; // promena s jmenem aktualni galerie
-var odkazAktGal;
-var margin = [];
-var puvodniOdsazeni;
-var iProhlizeni; // zacina indexovat od 1 pro funkci eq
+/*
+---------------------------------------------------------------------------------------------------
+Projekt       : ITU - Tema 66 Modul fotogalerie pro web
+Jmeno souboru : fotoGalerie.js
+Autori        : Popelka Karel, xpopel15
+                Kolacek Petr, xkolac11
+                Hnilica Petr, xhnili07
+Skolni rok    : 2013/2014
+Copyright     : (c) Vysoke uceni technicke FIT
+Popis         : Modul je urcen pro automaticek generovani foto galerie
+----------------------------------------------------------------------------------------------------
+ */ 
+ 
+/*--------------------------------------------------------------------------------------------------
+promene indikujici nacteni galerie */ 
 var obrazkuCelkem = 0;
 var nactenychObrazku = 0;
-var fgNaStrance = []; // vsechny fotogalerie na strance
-var vsechnyGalerie = [];
-  
+
+var rychlostProhlizeni;
+
+var fgNahled = [];
+var fgPromitani = []; 
+var odkazAktGal;
+
+// docasna promenna
+var fgNaStrance = [];
+var puvodniOdsazeni;
+
+
+/*--------------------------------------------------------------------------------------------------
+inicializace dokumentu */ 
 // vola se pri nacteni DOM
 $( document ).ready( function(){
-	// nahrej CSS
+	// nacti css
 	$('head').append('<link rel="stylesheet" type="text/css" href="fotoGalerie/fotoGalerie.css">');
 	
-	// vytvoreni divu pozadi
+	// vytvoreni prvku fotoalerie
 	$( "body" ).append( $( "<div id=fgBackground />" ).hide() );
 	$( "#fgBackground" ).append( '<div id="fgPasFotek"></div>' );
-	
-	// pokud je div aktivovany klikem na nej ho ukonci (neplati pro potomky)
-	$( "#fgBackground" ).click(function( e ) {
-		// nejedna se o potomka
-		if($( "#fgBackground" ).has( e.target ).length === 0 ||
-		   $( "#fgPasFotek" ).is( e.target ))		   {
-			zavriProhlizeni();
-		}
-	});
-	
-	// udalosti po kliknuti na galerie
-	$( ".fotoGalerie" ).click(function() {
-		margin.splice(0, margin.length);
-		// nacti jmeno aktualni galerie
-		var trida = $(this).attr( "class" ).split(" ");
-		if( $( trida ).length == 2){
-			nazev = trida[0] == "fotoGalerie" ? trida[1] : trida[0];	
-		}
-		jmAktualniGal = nazev;
-		iProhlizeni = 0;
-		// zakazani scrollovani
-		$("body").css({"overflow":"hidden"});
-		$( "#fgBackground" ).css( "opacity", "0" );
-		$( "#fgBackground" ).show();
-		$( "#fgBackground" ).fadeTo(500, 0.8);
-		// zastav vykreslovani fotogalerii na strance
-		$.each(fgNaStrance, function () { 
-			this.element.children().detach();
-		});
-		// smaz a nastav fotky do pasu fotek
-		$( "#fgPasFotek" ).children().detach();
-		// najdi spravnou galerii
-		$.each( vsechnyGalerie, function(){ //najdi v nactenych fotoGaleriich
-			var galeriePol = this;
-			// nasel jsem schodu
-			if( galeriePol.jmeno == jmAktualniGal ) {
-				$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
-					$.each(fgNaStrance, function() {
-						this.element.children().finish();
-					});
-					//this.stop();
-					this.element.removeClass("obrazekGalerie").addClass("fotoProhlizeni");
-					this.element.removeAttr( "style" );
-					this.element.css( "opacity", "1" );
-					$( "#fgPasFotek" ).append( this.element );
-				});
-			}
-		});
-		vykresliProhlizeni();
-		// nastav sirku
-		$( "#fgPasFotek" ).css( "margin-left", puvodniOdsazeni);
-	});
-	
-	// reakce na klavesy
-	$( document ).keyup(function( e ) {
-		if ( e.keyCode == 27 && $( "#fgBackground" ).is(":visible")) { // esc
-			zavriProhlizeni();
-		}   
-		if ( e.keyCode == 32 && $( "#fgBackground" ).is(":visible")) { // space
-			$( "#fgBackground" ).hide( "slow" );
-		}   
-		if ( e.keyCode == 37 && $( "#fgBackground" ).is(":visible")) { // leva sipka
-			$( "#fgPasFotek" ).animate({left:'+=250px'});
-			e.preventDefault();
-		}   
-		if ( e.keyCode == 38 && $( "#fgBackground" ).is(":visible")) { // horni sipka
-			$( "#fgBackground" ).hide( "slow" );
-		}   
-		if ( e.keyCode == 39 && $( "#fgBackground" ).is(":visible")) { // prava sipka
-			$( "#fgPasFotek" ).animate({left:'-=250px'});
-			e.preventDefault();
-		}   
-		if ( e.keyCode == 40 && $( "#fgBackground" ).is(":visible")) { // dolni sipka
-			//$( "#fgBackground" ).hide( "slow" );
-			e.preventDefault();
-		}  		
-	});
 
-	// najdi fotogalerie na strance
-	$.each($(".fotoGalerie"), function () {
-		var trida = $(this).attr("class").split(" ");
-		var nazev;
-		if( trida.length == 2){
-			nazev = trida[0] == "fotoGalerie" ? trida[1] : trida[0];
-		}
-		fgNaStrance.push( { element : $(this), jmeno : nazev, index : 0} );
-		// alert("pridavam: " + nazev);
-	});
-	
-	// nacteni galerii
-	$.getJSON( "fotoGalerie/popisGalerii.json", function( data ) {
-		// nacti obrazky a info
-		$.each(data, function() { // iterace pres galerie
-			var galerie = { jmeno : this.jmenoGalerie, obrazky : [], index : 0 };
-			$.each(this.obrazky, function() { // iterace pres obrazky
-				var obrazek = { jmeno : this.jmeno, nazev : this.nazev, popis : this.popis};
-				// vytvoreni elementu obrazku
-				obrazek.element = $("<img/>")
-									.attr("src", "fotoGalerie/fotky/"+galerie.jmeno+"/"+this.jmeno)
-									.load(function() {
-					nactenychObrazku++;
-					obrazek.sirka = this.width;
-					obrazek.vyska = this.height
-					//alert("Nacten obrazek: "+"\nRozmery: ["+this.width+", "+this.height+"]");
-				});
-				galerie.obrazky.push( obrazek );
-				obrazkuCelkem++;
-			});
-			vsechnyGalerie.push(galerie);
-		});
-	});
-	
-	// nacteni ovladacich prvku	
+	// nacteni ovladacich prvku	galerie
 	$( "#fgBackground" ).append(
 		$('<img id="fgDalsi" src="fotoGalerie/obrazky/dalsi.png"/>').load(function() {
 			nactenychObrazku++;
@@ -155,65 +65,176 @@ $( document ).ready( function(){
 		})
 	);
 	obrazkuCelkem += 5;
+	
+	// najdi fotogalerie na strance
+	$.each($(".fotoGalerie"), function () {
+		var trida = $(this).attr("class").split(" ");
+		var nazev;
+		if( trida.length == 2){
+			nazev = trida[0] == "fotoGalerie" ? trida[1] : trida[0];
+		}
+		fgNaStrance.push( { element : $(this), jmeno :  nazev } );
+	});
+	
+	// nacteni galerie z jsonu
+	$.getJSON( "fotoGalerie/popisGaleri.json", function( data ) {		
+		// inicializace rychlosti
+		rychlostProhlizeni = data.rychlostProhlizeni;
+		$.each(data.galerie, function() { // iterace pres galerie 
+			var galeriePromitani = {	jmenoGalerie : this.jmenoGalerie,
+										jmenoSlozky : this.jmenoSlozky,
+										obrazky : [], 
+										index : -1 };
+										
+			$.each(this.obrazky, function() { // iterace pres obrazky
+				var obrazek = { nazevSouboru : this.nazevSouboru, 
+								jmenoObrazku : this.jmenoObrazku, 
+								popisObrazku : this.popisObrazku};
+				// nacteni fotek promitani
+				obrazek.element = $("<img/>")
+									.addClass("fotoProhlizeni")
+									.attr("src", "fotoGalerie/fotky/"+galeriePromitani.jmenoSlozky+"/"+this.nazevSouboru)
+									.load(function() {
+										nactenychObrazku++;
+										obrazek.sirka = this.width;
+										obrazek.vyska = this.height
+									});
+				obrazkuCelkem++;
+				galeriePromitani.obrazky.push(obrazek);
+			});		
+			fgPromitani.push(galeriePromitani); 
+		});
+	});
+	
+	// inicializuj obsluhy udalosti
+	obsluhyUdalosti();
 }); 
+
+/*--------------------------------------------------------------------------------------------------
+nacteni dokumentu */ 
+// vola se pri kompletnim nacteni stranky do pameti
+$(window).load(function() {
+	// zacni se dotazovat na stahle obrazky
+	var interval = setInterval(function() {
+		// nacteny vsechny obrazky
+		if( obrazkuCelkem == nactenychObrazku ) {
+			clearInterval(interval);
+			obrazkyNacteny();
+		}
+	}, 100);
+});
+
+/*--------------------------------------------------------------------------------------------------
+nacteni obrazku a nahledu */ 
+function obrazkyNacteny(){
+	// vynuluj pocitadla
+	obrazkuCelkem = 0;
+	nactenychObrazku = 0;
+	nactiNahledy();
+	// zacni se dotazovat na stahle nahledy
+	var interval = setInterval(function() {
+		// nacteny vsechny nahledy
+		if( obrazkuCelkem == nactenychObrazku ) {
+			clearInterval(interval);
+			nahledyNacteny();
+		}
+	}, 100);
+}
+
+function nahledyNacteny() {
+	zmenObrazekGal();
+	setInterval(zmenObrazekGal , 5000);
+}
+
+function nactiNahledy(){
+// nacteni nahledu pro kazdou fotogaleri
+	$.each(fgNaStrance, function () {
+		var fgNaStrPol = this;
+		// najdi odpovidajici fotogaleri z jsonu
+		$.each(fgPromitani, function () {
+			
+			if ( fgNaStrPol.jmeno == this.jmenoSlozky){ // jedna do o spravnou galeri
+				
+				var galerieNahled = { 	jmenoSlozky : this.jmenoSlozky,
+										obrazky : [], 
+										galEl : fgNaStrPol.element,
+										index : -1 };
+									
+				$.each(this.obrazky, function() { // iterace pres obrazky
+					var obrazek = { nazevSouboru : this.nazevSouboru };
+					// nacteni fotek promitani
+					obrazek.element = $("<img/>")
+										.addClass( "obrazekGalerie" )
+										.attr("src", "fotoGalerie/fotky/"+galerieNahled.jmenoSlozky+"/"+this.nazevSouboru)
+										.load(function() {
+											nactenychObrazku++;
+											obrazek.sirka = this.width;
+											obrazek.vyska = this.height
+										});
+					obrazkuCelkem++;
+					galerieNahled.obrazky.push(obrazek);
+				});
+				fgNahled.push(galerieNahled);
+			}
+		});
+	});
+}
+
+/*--------------------------------------------------------------------------------------------------
+provadeni zmen dokumentu */ 
 
 function zmenObrazekGal() {
 	// zmen pokud nejni spustena galerie
 	if( $( "#fgBackground" ).is(":visible") ) {
 		return false;
 	}
-	$.each( fgNaStrance, function() { // iteruj pøes fotogalerie na strance
-		var polozkaNaStrance = this;
-		$.each( vsechnyGalerie, function(){ //najdi v nactenych fotoGaleriich
-			if( polozkaNaStrance.jmeno == this.jmeno ){
-				var vsechnyGalPolozka = this;
-				var deti = polozkaNaStrance.element.children();
-				//nastav animaci
-				deti.fadeTo(2000,0);
-				// inkrementace indexu pomoci modula
-				polozkaNaStrance.index = ( polozkaNaStrance.index + 1 ) % vsechnyGalPolozka.obrazky.length;
-				//pridani do fotogalerie
-				polozkaNaStrance.element.append( vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element );
-				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.removeAttr();
-				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.removeClass("fotoProhlizeni").addClass( "obrazekGalerie" );
-				// zjisteni orientace galerie a obrazku
-				var pomerObr = vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("width").slice(0, -2) /
-								vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("height").slice(0, -2);
-				var pomerGal = polozkaNaStrance.element.css("width").slice(0, -2) /
-								polozkaNaStrance.element.css("height").slice(0, -2);		
-				if( (pomerGal > 1 && pomerObr >= 1) || // galerie na sirku obrazek na sirku
-					(pomerGal >= 1 && pomerObr <= 1)){ // galerie na sirku obrazek na vysku 
-					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
-						"height" : polozkaNaStrance.element.css("height"),
-						"width" : (polozkaNaStrance.element.css("height").slice(0, -2) * pomerObr) + "px",
-					});
-				}
-				else{ 
-					vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
-						"width" : polozkaNaStrance.element.css("width"),
-						"height" : (polozkaNaStrance.element.css("width").slice(0, -2) / pomerObr) + "px",
-					});
-				}
-				// nastaveni odsazeni obrazku
-				var top = (polozkaNaStrance.element.css("height").slice(0, -2) -
-						vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("height").slice(0, -2)) / 2;
-				var left = (polozkaNaStrance.element.css("width").slice(0, -2) -
-						vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css("width").slice(0, -2)) / 2;		
-				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.css({
-					"margin-top" : top,
-					"margin-left" : left,
-					"opacity" : "0"
-				});		
-				vsechnyGalPolozka.obrazky[polozkaNaStrance.index].element.fadeTo(2000,1);
-				setTimeout(function(){ 
-					deti.detach();
-				},2000); // cekej na dokonceni prechodu
-			}
-		});
+
+	$.each( fgNahled, function() { // iteruj pøes fotogalerie na strance
+		var deti = this.galEl.children();
+		//nastav animaci
+		deti.fadeTo(2000,0);
+		// inkrementace indexu pomoci modula
+		this.index = ( this.index + 1 ) % this.obrazky.length;
+		//pridani do fotogalerie
+		
+		this.galEl.append( this.obrazky[this.index].element );
+		// zjisteni orientace galerie a obrazku
+		var pomerObr = this.obrazky[this.index].sirka /
+						this.obrazky[this.index].vyska;
+		var pomerGal = this.galEl.css("width").slice(0, -2) /
+						this.galEl.css("height").slice(0, -2);		
+		if( (pomerGal > 1 && pomerObr >= 1) || // galerie na sirku obrazek na sirku
+			(pomerGal >= 1 && pomerObr <= 1)){ // galerie na sirku obrazek na vysku 
+			this.obrazky[this.index].element.css({
+				"height" : this.galEl.css("height"),
+				"width" : (this.galEl.css("height").slice(0, -2) * pomerObr) + "px",
+			});
+		}
+		else{ 
+			this.obrazky[this.index].element.css({
+				"width" : this.galEl.css("width"),
+				"height" : (this.galEl.css("width").slice(0, -2) / pomerObr) + "px",
+			});
+		}
+		// nastaveni odsazeni obrazku
+		var top = (this.galEl.css("height").slice(0, -2) -
+				this.obrazky[this.index].element.css("height").slice(0, -2)) / 2;
+		var left = (this.galEl.css("width").slice(0, -2) -
+				this.obrazky[this.index].element.css("width").slice(0, -2)) / 2;		
+		this.obrazky[this.index].element.css({
+			"margin-top" : top,
+			"margin-left" : left,
+			"opacity" : "0"
+		});		
+		this.obrazky[this.index].element.fadeTo(2000,1);
+		setTimeout(function(){ 
+			deti.detach();
+		},2000); // cekej na dokonceni prechodu
 	});
 }
 
 function vykresliProhlizeni() {
+
 	$( "#fgPasFotek" ).css("height", ($( "#fgBackground" ).css("height").slice(0, -2) - 100) + "px");
 	// prekresli ovladaci prvky
 	$( "#fgSpust").css({
@@ -243,85 +264,132 @@ function vykresliProhlizeni() {
 		"position" : "absolute"
 	});	
 	
-	// pro aktualni galerii nastav velikosti obrazku
-	$.each( vsechnyGalerie, function(){ //najdi v nactenych fotoGaleriich
-		var galeriePol = this;
-		// nasel jsem schodu
-		if( galeriePol.jmeno == jmAktualniGal ) {
-			odkazAktGal = this;
-			var sirkaCelkem = 0;
-			$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
-				var obrazek = this;
-				// zjisteni orientace okna a obrazku
-				var pomerObr =  obrazek.sirka / obrazek.vyska;
-				// dostupna sirka a vyska
-				var vyskaOkn = $( "#fgBackground" ).css("height").slice(0, -2) - 100;
-				var sirkaOkn = $( "#fgBackground" ).css("width").slice(0, -2) / 2;
-				var pomerOkn = sirkaOkn / vyskaOkn;	
-				var konSirka;
-				var konVyska;
-				if( (pomerOkn > 1 && pomerObr >= 1) || // galerie na sirku obrazek na sirku
-					(pomerOkn >= 1 && pomerObr <= 1)){ // galerie na sirku obrazek na vysku 
-					
-					if( obrazek.vyska > vyskaOkn ) {
-						konVyska = vyskaOkn;
-						konSirka = (vyskaOkn * pomerObr);
-					}
-					else{
-						konVyska = obrazek.vyska;
-						konSirka = obrazek.sirka;
-					}
-				}
-				else{ 
-					if( obrazek.vyska > sirkaOkn ) {
-						konSirka = sirkaOkn;
-						konVyska = (sirkaOkn / pomerObr);
-					}
-					else {
-						konSirka = obrazek.sirka;
-						konVyska = obrazek.vyska;
-					}
-				}
-				
-				var top = vyskaOkn / 2 - obrazek.vyska / 2;
-				top = top < 0 ? 0 : top;
-				obrazek.element.css({
-					"margin-top" : top + "px",
-					"width" : konSirka + "px",
-					"height" : konVyska + "px"
-				});
-				sirkaCelkem += konSirka + 10;
-				margin.push( sirkaCelkem );
-			});
+	var sirkaCelkem = 0;
+	$.each(odkazAktGal.obrazky , function() { // pro vsechny obrazky
+		var obrazek = this;
+		// zjisteni orientace okna a obrazku
+		var pomerObr =  obrazek.sirka / obrazek.vyska;
+		// dostupna sirka a vyska
+		var vyskaOkn = $( "#fgBackground" ).css("height").slice(0, -2) - 100;
+		var sirkaOkn = $( "#fgBackground" ).css("width").slice(0, -2) / 2;
+		var pomerOkn = sirkaOkn / vyskaOkn;	
+		var konSirka;
+		var konVyska;
+		//alert(sirkaOkn + "---" + vyskaOkn + "\n" + obrazek.sirka + "---" + obrazek.vyska)
+		
+		// vyber z mensich
+		if( pomerObr == 1 ) {
+			konSirka = vyskaOkn <= sirkaOkn ? vyskaOkn : sirkaOkn;
+			konVyska = vyskaOkn <= sirkaOkn ? vyskaOkn : sirkaOkn;
+		}
+		else if( 	(pomerOkn > 1 && pomerObr > 1 && pomerOkn > pomerObr) ||
+					(pomerOkn > 1 && pomerObr < 1 ) ||
+					(pomerOkn < 1 && pomerObr < 1 && pomerOkn < pomerObr) ||
+					(pomerOkn = 1 && pomerObr < 1 ) ||
+					(pomerOkn > 1 && pomerObr > 1 && pomerOkn > pomerObr) ) { // omezeni y
+			konVyska = vyskaOkn;
+			konSirka = (vyskaOkn * pomerObr);
+		}
+		else { // omezeni x
+			konSirka = sirkaOkn;
+			konVyska = (sirkaOkn / pomerObr);
+		}
+		
+		var top = vyskaOkn / 2 - obrazek.vyska / 2;
+		top = top < 0 ? 0 : top;
+		/*obrazek.element.css({
+			"margin-top" : top + "px",
+			"width" : konSirka + "px",
+			"height" : konVyska + "px"
+		});*/
+		obrazek.element.css({
+			"width" : konSirka + "px",
+			"height" : konVyska + "px"
+		});
+		sirkaCelkem += konSirka + 10;
+		//alert("prirazuju " + konSirka + "---" + konVyska)
+	});
 
-			$( "#fgPasFotek" ).css( "width", sirkaCelkem + "px" );
-			puvodniOdsazeni = $( "#fgBackground" ).css("width").slice(0, -2) / 2 - this.obrazky[0].sirka / 2;
+	$( "#fgPasFotek" ).css( "width", sirkaCelkem + "px" );
+	puvodniOdsazeni = $( "#fgBackground" ).css("width").slice(0, -2) / 2 - odkazAktGal.obrazky[0].sirka / 2;
+}
+
+/*--------------------------------------------------------------------------------------------------
+obsluhy udalosti*/ 
+
+function obsluhyUdalosti() {
+	// udalosti po kliknuti na galerie
+	$( ".fotoGalerie" ).click(function() {
+		
+		// nacti jmeno aktualni galerie
+		var nazevAktGal;
+		var trida = $(this).attr( "class" ).split(" ");
+		if( $( trida ).length == 2){
+			nazevAktGal = trida[0] == "fotoGalerie" ? trida[1] : trida[0];	
+		}
+		// zakazani scrollovani
+		$("body").css({"overflow":"hidden"});
+		$( "#fgBackground" ).css( "opacity", "0" );
+		$( "#fgBackground" ).show();
+		$( "#fgBackground" ).fadeTo(500, 0.8);
+
+		// smaz a nastav fotky do pasu fotek
+		$( "#fgPasFotek" ).children().detach();
+		// najdi spravnou galerii
+		$.each( fgPromitani, function(){ //najdi v nactenych fotoGaleriich
+			var galeriePol = this;
+			// nasel jsem schodu
+			if( galeriePol.jmenoSlozky == nazevAktGal ) {
+				odkazAktGal = this;
+				$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
+					$( "#fgPasFotek" ).append( this.element );
+				});
+			}
+		});
+		vykresliProhlizeni();
+		// nastav sirku
+		$( "#fgPasFotek" ).css( "margin-left", puvodniOdsazeni);
+	});
+	
+	// pokud je div aktivovany klikem na nej ho ukonci (neplati pro potomky)
+	$( "#fgBackground" ).click(function( e ) {
+		// nejedna se o potomka
+		if($( "#fgBackground" ).has( e.target ).length === 0 ||
+		   $( "#fgPasFotek" ).is( e.target ))		   {
+			zavriProhlizeni();
 		}
 	});
 }
 
-function spustPromitani(){
-	zmenObrazekGal();
-	setInterval(zmenObrazekGal , 5000);
-}
-
-// vola se pri kompletnim nacteni stranky do pameti
-$(window).load(function() {
-	// zacni se dotazovat na stahle obrazky
-	var interval = setInterval(function() {
-		// nacteny vsechny obrazky
-		if( obrazkuCelkem == nactenychObrazku ) {
-			clearInterval(interval);
-			spustPromitani();
-		}
-	}, 100);
+// reakce na klavesy
+$( document ).keyup(function( e ) {
+	if ( e.keyCode == 27 && $( "#fgBackground" ).is(":visible")) { // esc
+		zavriProhlizeni();
+	}   
+	if ( e.keyCode == 32 && $( "#fgBackground" ).is(":visible")) { // space
+		$( "#fgBackground" ).hide( "slow" );
+	}   
+	if ( e.keyCode == 37 && $( "#fgBackground" ).is(":visible")) { // leva sipka
+		$( "#fgPasFotek" ).animate({left:'+=250px'});
+		e.preventDefault();
+	}   
+	if ( e.keyCode == 38 && $( "#fgBackground" ).is(":visible")) { // horni sipka
+		$( "#fgBackground" ).hide( "slow" );
+	}   
+	if ( e.keyCode == 39 && $( "#fgBackground" ).is(":visible")) { // prava sipka
+		$( "#fgPasFotek" ).animate({left:'-=250px'});
+		e.preventDefault();
+	}   
+	if ( e.keyCode == 40 && $( "#fgBackground" ).is(":visible")) { // dolni sipka
+		//$( "#fgBackground" ).hide( "slow" );
+		e.preventDefault();
+	}  		
 });
 
 // scrollování
-$(window).scroll(function() {
+$( window ).scroll( function() {
 	var scroll = $(window).scrollTop();
-	$( "#fgBackground" ).css( "top",  scroll+"px");
-	//alert($( "#fgBackground" ).css("width") + "---" + $( "#fgBackground" ).css("height"));
+	$( "#fgBackground" ).css( "top",  scroll + "px");
 });
 
 // zmena velikost
@@ -332,32 +400,8 @@ $( window ).resize(function() {
 	}
 });
 
-/*
-function otevriProhlizeni() {
-	// zakazani scrollovani
-	$("body").css({"overflow":"hidden"});
-	$( "#fgBackground" ).css( "opacity", "0" );
-	$( "#fgBackground" ).show();
-	$( "#fgBackground" ).fadeTo(500, 0.8);
-	vykresliProhlizeni();
-	// zastav vykreslovani fotogalerii na strance
-	$.each(fgNaStrance, function () { 
-		this.element.children().detach();
-	});
-	// smaz a nastav fotky do pasu fotek
-	$( "#fgPasFotek" ).children().detach();
-	// najdi spravnou galerii
-	$.each( vsechnyGalerie, function(){ //najdi v nactenych fotoGaleriich
-		var galeriePol = this;
-		// nasel jsem schodu
-		if( galeriePol.jmeno == jmAktualniGal ) {
-			$.each(galeriePol.obrazky , function() { // pro vsechny obrazky
-				alert(this.element);
-				$( "#fgBackground" ).append( '<div class="ffds"></div>' );
-			});
-		}
-	});
-}*/
+/*--------------------------------------------------------------------------------------------------
+funkce pro udalosti*/ 
 
 function zavriProhlizeni() {
 	$( "#fgBackground" ).fadeTo(500, 0);

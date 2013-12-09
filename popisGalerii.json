@@ -1,0 +1,218 @@
+﻿"rychlostProhlizeni" : 1000,
+"galerie" :
+[
+	{
+		"jmenoGalerie" : "Galerie 01",
+		"jmenoSlozky"  : "galHor",
+		"obrazky" : 
+		[
+			{
+				"nazevSouboru" : "obrazek01.jpg",
+				"jmenoObrazku" : "Obrazek 01",
+				"popisObrazku" : "Popis obrazku 01"
+			},
+			{
+				"nazevSouboru" : "obrazek02.jpg",
+				"jmenoObrazku" : "Obrazek 02",
+				"popisObrazku" : "Popis obrazku 02"
+			},
+			{
+				"nazevSouboru" : "obrazek03.jpg",
+				"jmenoObrazku" : "Obrazek 03",
+				"popisObrazku" : "Popis obrazku 03"
+			},
+			{
+				"nazevSouboru" : "obrazek04.jpg",
+				"jmenoObrazku" : "Obrazek 04",
+				"popisObrazku" : "Popis obrazku 04"
+			},	
+			{
+				"nazevSouboru" : "obrazek05.jpg",
+				"jmenoObrazku" : "Obrazek 05",
+				"popisObrazku" : "Popis obrazku 05"
+			},
+			{
+				"nazevSouboru" : "obrazek06.jpg",
+				"jmenoObrazku" : "Obrazek 06",
+				"popisObrazku" : "Popis obrazku 06"
+			},
+			{
+				"nazevSouboru" : "obrazek07.jpg",
+				"jmenoObrazku" : "Obrazek 07",
+				"popisObrazku" : "Popis obrazku 07"
+			},
+			{
+				"nazevSouboru" : "obrazek08.jpg",
+				"jmenoObrazku" : "Obrazek 08",
+				"popisObrazku" : "Popis obrazku 08"
+			},
+			{
+				"nazevSouboru" : "obrazek09.jpg",
+				"jmenoObrazku" : "Obrazek 09",
+				"popisObrazku" : "Popis obrazku 09"
+			},	
+			{
+				"nazevSouboru" : "obrazek10.jpg",
+				"jmenoObrazku" : "Obrazek 10",
+				"popisObrazku" : "Popis obrazku 10"
+			},
+			{
+				"nazevSouboru" : "obrazek11.jpg",
+				"jmenoObrazku" : "Obrazek 11",
+				"popisObrazku" : "Popis obrazku 11"
+			},
+			{
+				"nazevSouboru" : "obrazek12.jpg",
+				"jmenoObrazku" : "Obrazek 12",
+				"popisObrazku" : "Popis obrazku 12"
+			},
+			{
+				"nazevSouboru" : "obrazek13.jpg",
+				"jmenoObrazku" : "Obrazek 13",
+				"popisObrazku" : "Popis obrazku 13"
+			},
+			{
+				"nazevSouboru" : "obrazek14.jpg",
+				"jmenoObrazku" : "Obrazek 14",
+				"popisObrazku" : "Popis obrazku 14"
+			},	
+			{
+				"nazevSouboru" : "obrazek15.jpg",
+				"jmenoObrazku" : "Obrazek 15",
+				"popisObrazku" : "Popis obrazku 15"
+			},
+			{
+				"nazevSouboru" : "obrazek16.jpg",
+				"jmenoObrazku" : "Obrazek 16",
+				"popisObrazku" : "Popis obrazku 16"
+			},
+			{
+				"nazevSouboru" : "obrazek17.jpg",
+				"jmenoObrazku" : "Obrazek 17",
+				"popisObrazku" : "Popis obrazku 17"
+			},
+			{
+				"nazevSouboru" : "obrazek18.jpg",
+				"jmenoObrazku" : "Obrazek 18",
+				"popisObrazku" : "Popis obrazku 18"
+			},
+			{
+				"nazevSouboru" : "obrazek19.jpg",
+				"jmenoObrazku" : "Obrazek 19",
+				"popisObrazku" : "Popis obrazku 19"
+			}
+			{
+				"nazevSouboru" : "obrazek20.jpg",
+				"jmenoObrazku" : "Obrazek 20",
+				"popisObrazku" : "Popis obrazku 20"
+			},
+		]
+	},
+	{
+		"jmenoGalerie" : "Galerie 02",
+		"jmenoSlozky"  : "galVer",
+		"obrazky" : 
+		[
+			{
+				"nazevSouboru" : "obrazek01.jpg",
+				"jmenoObrazku" : "Obrazek 01",
+				"popisObrazku" : "Popis obrazku 01"
+			},
+			{
+				"nazevSouboru" : "obrazek02.jpg",
+				"jmenoObrazku" : "Obrazek 02",
+				"popisObrazku" : "Popis obrazku 02"
+			},
+			{
+				"nazevSouboru" : "obrazek03.jpg",
+				"jmenoObrazku" : "Obrazek 03",
+				"popisObrazku" : "Popis obrazku 03"
+			},
+			{
+				"nazevSouboru" : "obrazek04.jpg",
+				"jmenoObrazku" : "Obrazek 04",
+				"popisObrazku" : "Popis obrazku 04"
+			},	
+			{
+				"nazevSouboru" : "obrazek05.jpg",
+				"jmenoObrazku" : "Obrazek 05",
+				"popisObrazku" : "Popis obrazku 05"
+			},
+			{
+				"nazevSouboru" : "obrazek06.jpg",
+				"jmenoObrazku" : "Obrazek 06",
+				"popisObrazku" : "Popis obrazku 06"
+			},
+			{
+				"nazevSouboru" : "obrazek07.jpg",
+				"jmenoObrazku" : "Obrazek 07",
+				"popisObrazku" : "Popis obrazku 07"
+			},
+			{
+				"nazevSouboru" : "obrazek08.jpg",
+				"jmenoObrazku" : "Obrazek 08",
+				"popisObrazku" : "Popis obrazku 08"
+			},
+			{
+				"nazevSouboru" : "obrazek09.jpg",
+				"jmenoObrazku" : "Obrazek 09",
+				"popisObrazku" : "Popis obrazku 09"
+			},	
+			{
+				"nazevSouboru" : "obrazek10.jpg",
+				"jmenoObrazku" : "Obrazek 10",
+				"popisObrazku" : "Popis obrazku 10"
+			},
+			{
+				"nazevSouboru" : "obrazek11.jpg",
+				"jmenoObrazku" : "Obrazek 11",
+				"popisObrazku" : "Popis obrazku 11"
+			},
+			{
+				"nazevSouboru" : "obrazek12.jpg",
+				"jmenoObrazku" : "Obrazek 12",
+				"popisObrazku" : "Popis obrazku 12"
+			},
+			{
+				"nazevSouboru" : "obrazek13.jpg",
+				"jmenoObrazku" : "Obrazek 13",
+				"popisObrazku" : "Popis obrazku 13"
+			},
+			{
+				"nazevSouboru" : "obrazek14.jpg",
+				"jmenoObrazku" : "Obrazek 14",
+				"popisObrazku" : "Popis obrazku 14"
+			},	
+			{
+				"nazevSouboru" : "obrazek15.jpg",
+				"jmenoObrazku" : "Obrazek 15",
+				"popisObrazku" : "Popis obrazku 15"
+			},
+			{
+				"nazevSouboru" : "obrazek16.jpg",
+				"jmenoObrazku" : "Obrazek 16",
+				"popisObrazku" : "Popis obrazku 16"
+			},
+			{
+				"nazevSouboru" : "obrazek17.jpg",
+				"jmenoObrazku" : "Obrazek 17",
+				"popisObrazku" : "Popis obrazku 17"
+			},
+			{
+				"nazevSouboru" : "obrazek18.jpg",
+				"jmenoObrazku" : "Obrazek 18",
+				"popisObrazku" : "Popis obrazku 18"
+			},
+			{
+				"nazevSouboru" : "obrazek19.jpg",
+				"jmenoObrazku" : "Obrazek 19",
+				"popisObrazku" : "Popis obrazku 19"
+			}
+			{
+				"nazevSouboru" : "obrazek20.jpg",
+				"jmenoObrazku" : "Obrazek 20",
+				"popisObrazku" : "Popis obrazku 20"
+			},
+		]
+	}
+]

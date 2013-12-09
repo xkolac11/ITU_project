@@ -1,40 +1,37 @@
-﻿.obrazekGalerie
+﻿/*
+---------------------------------------------------------------------------------------------------
+Projekt       : ITU - Tema 66 Modul fotogalerie pro web
+Jmeno souboru : fotoGalerie.css
+Autori        : Popelka Karel, xpopel15
+                Kolacek Petr, xkolac11
+                Hnilica Petr, xhnili07
+Skolni rok    : 2013/2014
+Copyright     : (c) Vysoke uceni technicke FIT
+Popis         : Modul je urcen pro automaticek generovani foto galerie
+----------------------------------------------------------------------------------------------------
+ */
+
+/*--------------------------------------------------------------------------------------------------
+styly pro nahled*/ 
+ 
+div.fotoGalerie
+{
+	position: relative;
+	background-color: rgb(0,0,0);
+	box-shadow: 8px 8px 5px #888888;
+	border-radius: 5px;
+	margin-top: 10px;
+	cursor: pointer;
+}
+
+img.obrazekGalerie
 {
 	position:absolute;
 	border-radius: 5px;
 }
 
-div.fotoGalerie
-{
-	position: relative;
-	border: solid 2px black;
-	background-color: rgb(0,0,0);
-	box-shadow: 8px 8px 5px #888888;
-	border-radius: 5px;
-	margin-top: 300px;
-}
-
-.fotoProhlizeni
-{
-	margin-right : 10px;
-	padding : 0;
-	box-shadow: 8px 8px 5px #888888;
-	border-radius: 5px;
-}
-
-div.fotka
-{
-	position: relative;
-	margin: 0 auto;
-	margin-top:40px;
-	box-shadow: 10px 10px 5px #888888;
-	border:3px solid #666666;
-	border-radius:5px;
-	width: 200px;
-	height: 400px;
-	background-color: rgb(0,255,255);
-	overflow: hidden;
-}
+/*--------------------------------------------------------------------------------------------------
+styly pro prohlizeni*/ 
 
 div#fgPasFotek
 {
@@ -59,4 +56,13 @@ div#fgBackground
 	background-color: rgb(192,192,192);
 	/*opacity:0.6;
 	filter:alpha(opacity=60);*/
+}
+
+img.fotoProhlizeni
+{
+	margin-right : 10px;
+	margin-bottom : 10px;
+	padding : 0;
+	box-shadow: 8px 8px 5px #888888;
+	border-radius: 5px;
 }
